@@ -1,7 +1,7 @@
 ﻿import { defineConfig } from "tsup";
 
 export default defineConfig({
-    entry: ["src/cli.ts"],
+    entry: ["src/neova.ts"],
     format: ["esm"],
     dts: false,
     sourcemap: true,

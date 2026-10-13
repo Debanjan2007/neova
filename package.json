@@ -20,7 +20,7 @@
   "author": "undefined",
   "contributors": [],
   "bin": {
-    "neova": "./bin/neova.js"
+    "neova": "./dist/neova.js"
   },
   "scripts": {
     "dev": "npm run build && node ./dist/cli.js",

@@ -1,0 +1,11 @@
+﻿node_modules/
+jspm_packages/
+
+package-lock.json
+tsconfig.json
+tsup.config.ts
+
+src/
+test/
+.gitignore
+*.md
