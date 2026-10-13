@@ -23,7 +23,8 @@
     "neova": "./bin/neova.js"
   },
   "scripts": {
-    "dev": "node ./src/cli.js"
+    "dev": "npm run build && node ./dist/cli.js",
+    "build": "tsup"
   },
   "dependencies": {
     "@clack/prompts": "^1.8.1",

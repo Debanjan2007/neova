@@ -3,15 +3,49 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { resolveConfig } from "./config.js";
 
-function createPackageJson(config) {
+interface GeneratorInput {
+    name: string;
+    language: "javascript" | "typescript";
+    module: "esm" | "cjs" | "dual";
+}
+
+function createPackageJson(config: ReturnType<typeof resolveConfig>) {
     const { name, module, isTypeScript } = config;
     const isDual = module === "dual";
     const isCjs = module === "cjs";
 
     const output = isCjs ? "index.js" : "index.js";
     const cjsOutput = "index.cjs";
+    const packageExports = isDual
+        ? {
+            ".": {
+                import: {
+                    types: "./dist/index.d.ts",
+                    default: "./dist/index.js"
+                },
+                require: {
+                    types: "./dist/index.d.cts",
+                    default: "./dist/index.cjs"
+                }
+            }
+        }
+        : isCjs
+            ? {
+                ".": {
+                    ...(isTypeScript ? { types: "./dist/index.d.ts" } : {}),
+                    require: "./dist/index.js",
+                    default: "./dist/index.js"
+                }
+            }
+            : {
+                ".": {
+                    ...(isTypeScript ? { types: "./dist/index.d.ts" } : {}),
+                    import: "./dist/index.js",
+                    default: "./dist/index.js"
+                }
+            };
 
-    const pkg = {
+    return {
         name,
         version: "1.0.0",
         description: "",
@@ -21,34 +55,7 @@ function createPackageJson(config) {
             ? `./dist/${isDual ? cjsOutput : output}`
             : "./dist/index.js",
         module: "./dist/index.js",
-        exports: {
-            ".": isDual
-                ? {
-                    import: {
-                        types: "./dist/index.d.ts",
-                        default: "./dist/index.js"
-                    },
-                    require: {
-                        types: "./dist/index.d.cts",
-                        default: "./dist/index.cjs"
-                    }
-                }
-                : isCjs
-                    ? {
-                        types: isTypeScript
-                            ? "./dist/index.d.ts"
-                            : undefined,
-                        require: "./dist/index.js",
-                        default: "./dist/index.js"
-                    }
-                    : {
-                        types: isTypeScript
-                            ? "./dist/index.d.ts"
-                            : undefined,
-                        import: "./dist/index.js",
-                        default: "./dist/index.js"
-                    }
-        },
+        exports: packageExports,
         files: ["dist"],
         scripts: {
             build: "tsup",
@@ -60,28 +67,9 @@ function createPackageJson(config) {
             ...(isTypeScript ? { typescript: "^5.0.0" } : {})
         }
     };
-
-    // Remove optional properties that have no value.
-    function clean(value) {
-        if (Array.isArray(value)) {
-            return value.map(clean);
-        }
-
-        if (value && typeof value === "object") {
-            return Object.fromEntries(
-                Object.entries(value)
-                    .filter(([, child]) => child !== undefined)
-                    .map(([key, child]) => [key, clean(child)])
-            );
-        }
-
-        return value;
-    }
-
-    return clean(pkg);
 }
 
-function createTsupConfig(config) {
+function createTsupConfig(config: ReturnType<typeof resolveConfig>): string {
     const { formats, isTypeScript } = config;
 
     return `
@@ -105,7 +93,10 @@ export default defineConfig({
 `.trimStart();
 }
 
-export async function generatePackage(input, destination = process.cwd()) {
+export async function generatePackage(
+    input: GeneratorInput,
+    destination: string = process.cwd()
+): Promise<string> {
     const config = resolveConfig(input);
     const target = path.resolve(destination, config.name);
 
@@ -113,8 +104,10 @@ export async function generatePackage(input, destination = process.cwd()) {
     try {
         await fs.access(target);
         throw new Error(`Destination already exists: ${target}`);
-    } catch (error) {
-        if (error.code !== "ENOENT") throw error;
+    } catch (error: unknown) {
+        if (!(error instanceof Error) || !("code" in error) || error.code !== "ENOENT") {
+            throw error;
+        }
     }
 
     await fs.mkdir(path.join(target, "src"), {

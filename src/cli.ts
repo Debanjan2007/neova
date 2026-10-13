@@ -1,10 +1,9 @@
-﻿import * as p from "@clack/prompts";
+import * as p from "@clack/prompts";
 import { generatePackage } from "./generator.js";
-import figlet from "figlet"; 'figlet'
+import figlet from "figlet";
 
 async function main() {
-
-    const neova = await figlet("NEOVA")
+    const neova = await figlet("NEOVA");
     console.log(neova);
     p.intro("Neova — npm package scaffolding");
     const name = await p.text({
@@ -53,7 +52,7 @@ async function main() {
         p.log.success(`Package created at ${target}`);
         p.outro("Next: install dependencies and build your package.");
     } catch (error) {
-        p.log.error(error.message);
+        p.log.error(error instanceof Error ? error.message : String(error));
         process.exitCode = 1;
     }
 }
