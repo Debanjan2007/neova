@@ -1,6 +1,11 @@
 ﻿import * as p from "@clack/prompts";
 import { generatePackage } from "./generator.js";
+import figlet from "figlet"; 'figlet'
+
 async function main() {
+
+    const neova = await figlet("NEOVA")
+    console.log(neova);
     p.intro("Neova — npm package scaffolding");
     const name = await p.text({
         message: "What is your package name?",
