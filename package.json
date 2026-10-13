@@ -22,6 +22,9 @@
   "bin": {
     "neova": "./dist/neova.js"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "dev": "npm run build && node ./dist/cli.js",
     "build": "tsup"

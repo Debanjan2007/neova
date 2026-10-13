@@ -57,6 +57,9 @@ function createPackageJson(config: ReturnType<typeof resolveConfig>) {
         module: "./dist/index.js",
         exports: packageExports,
         files: ["dist"],
+        publishConfig: {
+            "access": "public"
+        },
         scripts: {
             build: "tsup",
             dev: "tsup --watch",
