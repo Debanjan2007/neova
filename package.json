@@ -1,6 +1,6 @@
 {
   "name": "neova",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "type": "module",
@@ -10,13 +10,13 @@
     "node": ">= 14.0.0",
     "npm": ">= 6.0.0"
   },
-  "homepage": "",
+  "homepage": "https://github.com/Debanjan2007/neova#readme",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/Debanjan2007/neova"
   },
   "bugs": "",
-  "keywords": [],
+  "keywords": [ "utility" , "tool" , "node" , "npm" , "package"],
   "author": "undefined",
   "contributors": [],
   "bin": {
