@@ -15,6 +15,13 @@ Ready to create? Run:
 npx neova
 ```
 
+You can also run Neova with Bun or pnpm:
+
+```bash
+bun exec neova
+pnpm dlx neova
+```
+
 Or always use the latest release:
 
 ```bash
