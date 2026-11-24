@@ -50,7 +50,9 @@ async function main() {
             module
         });
         p.log.success(`Package created at ${target}`);
-        p.outro("Next: install dependencies and build your package.");
+        p.log.step(`cd ${target}`)
+        p.log.step(`npm install --ignore-scripts`)
+        p.outro("Dig in building your package!");
     } catch (error) {
         p.log.error(error instanceof Error ? error.message : String(error));
         process.exitCode = 1;
