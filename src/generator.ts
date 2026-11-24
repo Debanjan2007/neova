@@ -141,6 +141,33 @@ export function hello(name${config.isTypeScript ? ": string" : ""} = "world") {
         fs.writeFile(
             path.join(target, ".gitignore"),
             "node_modules/\ndist/\n.env\n"
+        ),
+        fs.writeFile(
+            path.join(),
+            `# Source and tests\n
+            src/\n
+            test/\n
+            tests/\n
+            __tests__/\n
+            *.test.*\n
+            *.spec.*\n
+            coverage/\n
+            \n
+            # Config and tooling\n
+            .vscode/\n
+            .github/\n
+            .editorconfig\n
+            .eslintrc*\n
+            .prettierrc*\n
+            tsconfig.json\n
+            *.config.js\n
+            *.config.ts\n
+            \n
+            # OS and temporary files\n
+            .DS_Store\n
+            *.log\n
+            *.swp\n
+            `
         )
     ]);
 
